@@ -12076,7 +12076,7 @@ Run the agent.py file after setting the flags from projects/smartcab folder inst
 <p><strong>input:oncoming</strong>: This feature informs the cab of the oncoming traffic and helps to take decisions accordingly, hence it is also important for the safety and reliability of the cab.</p>
 <p>The following features are not considered important for the cab's safety and reliabiliy:</p>
 <p><strong>input:right</strong>: This parameter indicates if there is a vehicle present in the right side of our cab and if so, what actions to be taken. But this feature is not important, because if there is a car on right and the signal is red, the cab shouldn't go lest of forward in any case, i.e. no extra info is provided as such. Also, if we need to make a right turn when light is red, then no extra information is required as the vehicle on right is on a lane which is for a separate travel direction.</p>
-<p><strong>deadline</strong>: What I understand, we need not set a deadline for the agent to learn it's driving skills, it will do that automatically while it builds its Q-table. Also, setting a deadline will make the agent's learning a bit restricted according to me.</p>
+<p><strong>deadline</strong>: What I understand, we need not set a deadline for the agent to learn it's driving skills, it will do that automatically while it builds its Q-table. Also, setting a deadline will make the agent's learning a bit restricted according to me. It will affect the agent's learning procedure negatively, because it will cause the agent to violate traffice rules to reach the destination. It might also cause the state space to increase unnessarily.</p>
 
 </div>
 </div>
@@ -12107,7 +12107,7 @@ Run the agent.py file after setting the flags from projects/smartcab folder inst
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>We have 3 waypoint actions (left, right, forward); 2 light states (red, green); 4 left and oncoming features each (None, left, right, forward), and the set of next action has 4 states too (None, left, right, forward). So, if we consider waypoint, left, forward we have state space of 3X2X4X4=96 elements. But if consider the set of nes=xt actions too, then we have a state space of 96X4=384 elements.</p>
+<p>We have 3 waypoint actions (left, right, forward); 2 light states (red, green); 4 left and oncoming features each (None, left, right, forward), and the set of next action has 4 states too (None, left, right, forward). So, if we consider waypoint, left, forward we have state space of 3X2X4X4=96 elements. But if consider the set of next actions too, then we have a state space of 96X4=384 elements.</p>
 
 </div>
 </div>
@@ -12492,7 +12492,7 @@ epsilon = e^(-(alphaXt)), safety-A+, reliability-A
 epsilion = abs(cos(alphaXt)), safety-A+, reliability-A+.
 Out of all these, abs(cos(alphaXt)) is the best decay function and will be use for the final submission.</p>
 <p>It took almost 158 training trails before the agent could be tested on testing trials.</p>
-<p>The epsilon-tolerance was 0.001 nad the alpha used was 0.01.</p>
+<p>The epsilon-tolerance was 0.001 and the alpha used was 0.01. These are the values of alpha and epsilon which give the best results for the agent. These values were arrived at by trial and error method. The default values caused the learning to converge too soon, causing improper learning, and the values of epsilon-tolerance below 0.001 caused the learning model to overfit. Hence, the given values were chosen.</p>
 <p>This improved Q-learner has almost zero bad decisions, accidents and violations as compared to the default Q-learner, and the safety as well as the reliability rating are both A+, whereas for the previous learner, we had F and A+ ratings.</p>
 <p>Yes, since the agent makes very little errors during the training trails, it means that that it has learnt an optimal driving policy.</p>
 <p>Yes, I am satisfied by such good results for the driving agent after training and testing.</p>
@@ -12584,8 +12584,25 @@ right_green_forward_None
  -- None : -0.39
  -- left : 0.02
  
- Even here, the agent gives an optimal result, with the highest value for a right turn. 
- Since, the agent has an A+ rating for safety too, there may be no such example in which the agent will result in a suboptimal policy.
+Even here, the agent gives an optimal result, with the highest value for a right turn. 
+Since, the agent has an A+ rating for safety too, there may be no such example in which the agent will result in a suboptimal policy. But, such a policy example is available.
+If the input space is: {'left', 'green', 'None', 'right'}
+
+Action     Policy
+forward    optimal
+right      suboptimal
+none       incorrect
+left       incorrect
+
+On searching 'sim_improved-learning.txt',i found the following results:
+
+left_green_None_right
+ -- forward : 0.01
+ -- right : 0.07
+ -- None : -0.09
+ -- left : -0.41
+ 
+Here, it is clear that the agent will turn right instead of going forward, which was the optimal policy. Since, the agent has its destination at its left, going right is a suboptimal policy, as it turns to the exactly opposite direction thean required. Hence, the agent here chooses the suboptimal policy, because the accuracy of the learning is not a 100%. It might make some minor errors.
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">

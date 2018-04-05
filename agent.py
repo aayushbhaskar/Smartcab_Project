@@ -24,7 +24,7 @@ class LearningAgent(Agent):
         ###########
         # Set any additional class parameters as needed
         self.t=0
-
+        self.a=0.01
 
     def reset(self, destination=None, testing=False):
         """ The reset function is called at the beginning of each trial.
@@ -46,11 +46,11 @@ class LearningAgent(Agent):
             self.alpha=0.0
         else:
             #self.epsilon=self.epsilon-0.05
-            #self.epsilon=self.alpha**self.t
+            #self.epsilon=self.a**self.t
             self.t=self.t+1.0
             #self.epsilon = 1.0/(self.t**2)
-            #self.epsilon=np.e**(-(self.alpha*self.t))
-           self.epsilon=np.fabs(np.cos(self.alpha*self.t))
+            #self.epsilon=np.e**(-(self.a*self.t))
+           self.epsilon=np.fabs(np.cos(self.a*self.t))
 
         return None
 
